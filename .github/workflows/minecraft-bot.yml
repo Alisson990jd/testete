@@ -1,0 +1,42 @@
+name: Minecraft Bot Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      server_address:
+        description: 'Endereço do servidor Minecraft'
+        required: true
+        default: 'Alisson9934.aternos.me'
+      server_port:
+        description: 'Porta do servidor Minecraft'
+        required: true
+        default: '45214'
+      bot_username:
+        description: 'Nome de usuário do bot'
+        required: true
+        default: 'IA_Bot'
+
+jobs:
+  run-minecraft-bot:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run Minecraft Bot
+      run: |
+        echo "Iniciando bot Minecraft para servidor ${{ github.event.inputs.server_address }}:${{ github.event.inputs.server_port }}"
+        node bot.js --server ${{ github.event.inputs.server_address }} --port ${{ github.event.inputs.server_port }} --username ${{ github.event.inputs.bot_username }}
+      env:
+        SERVER_ADDRESS: ${{ github.event.inputs.server_address }}
+        SERVER_PORT: ${{ github.event.inputs.server_port }}
+        BOT_USERNAME: ${{ github.event.inputs.bot_username }}
